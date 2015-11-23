@@ -213,6 +213,7 @@ public class MainActivity extends Activity {
                     String des = textView.getText().toString();
                     Double rate = myDatabaseManagerForSelectedCountries.GetRateByDes(des);
                     textView.setText(rate.toString());
+
                 }
             });*/
         }
