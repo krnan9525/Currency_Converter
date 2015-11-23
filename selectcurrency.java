@@ -9,10 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -71,5 +75,27 @@ public class selectcurrency extends AppCompatActivity {
         startActivity(intent);
         this.finish();
     }
+    public void sendMessage3(View view) throws IOException, SQLException {
+        Button button = (Button)view.findViewById(R.id.button3);
+        LinearLayout vwParentRow = (LinearLayout) button.getParent();
+        LinearLayout vwParentRow2 = (LinearLayout) vwParentRow.getParent();
+        LinearLayout vwParentRow3 = (LinearLayout) vwParentRow2.getParent();
+        TextView textView = (TextView) vwParentRow3.findViewById(R.id.textView2);
+        String name = textView.getText().toString();
+        DataStruct dataStruct;
+        dataStruct=myDatabaseManager.GetDataStructByName(name);
+        myDatabaseManagerForSelectedCountries.DBInsert(dataStruct.abbr,dataStruct.description,dataStruct.symbol);
+    }
+    public void sendMessage4(View view)
+    {
+        Button button = (Button)view.findViewById(R.id.button4);
+        LinearLayout vwParentRow = (LinearLayout) button.getParent();
+        LinearLayout vwParentRow2 = (LinearLayout) vwParentRow.getParent();
+        LinearLayout vwParentRow3 = (LinearLayout) vwParentRow2.getParent();
+        TextView textView = (TextView) vwParentRow3.findViewById(R.id.textView2);
+        String name = textView.getText().toString();
+        myDatabaseManagerForSelectedCountries.DeleteDataByName(name);
+    }
+
 
 }

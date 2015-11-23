@@ -133,17 +133,25 @@ public class MyDatabaseManagerForSelectedCountries {
         {
             db.execSQL("update "+CONTACTS_TABLE_NAME+ " set amount = "+valu+" where name = '"+name+"'");
         }
+
+        public void DeleteDataByName(String name)
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(CONTACTS_TABLE_NAME,
+                    "name = ? ",
+                    new String[]{name});
+        }
+
         public Double GetRateByDes(String des)
         {
             Double result=0.0;
 
             Cursor res = db.query(CONTACTS_TABLE_NAME,new String[]{"*"},"name = ?",new String[]{des},null,null,null);
             res.moveToFirst();
-            while (res.isAfterLast() == false) {
-
-               // String temp=res.getString(res.getColumnIndex("rate"));
+            while (res.isAfterLast() == false)
+            {
+                if(res.getString(res.getColumnIndex("rate"))!=null)
                 result =Double.parseDouble(res.getString(res.getColumnIndex("rate")));
-                //array_list.add(res.getString(res.getColumnIndex("checked")));
                 res.moveToNext();
             }
             return result;
@@ -224,9 +232,6 @@ public class MyDatabaseManagerForSelectedCountries {
             //textView.setText(result);
         }
     }
-    // Given a URL, establishes an HttpUrlConnection and retrieves
-// the web page content as a InputStream, which it returns as
-// a string.
     private String downloadUrl(String myurl,String name,String res_name,String symbol) throws IOException {
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
@@ -255,6 +260,7 @@ public class MyDatabaseManagerForSelectedCountries {
                 contentValues.put("name", name);
                 contentValues.put("description", res_name);
                 contentValues.put("symbol", symbol);
+
                 try {
                     for(int i = 0 ;i < jsonArray.length();i++)
                     {
@@ -288,7 +294,7 @@ public class MyDatabaseManagerForSelectedCountries {
 
 
     }
-    // Reads an InputStream and converts it to a String.
+
     public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
         InputStreamReader inputData = new InputStreamReader(stream);
         BufferedReader reader = new BufferedReader(inputData,len);
@@ -311,6 +317,26 @@ public class MyDatabaseManagerForSelectedCountries {
     public void UpdateByname(String name, double valu)
     {
         dbHelper.UpdateByName(name,valu);
+    }
+
+
+    public void DeleteDataByName(String name)
+    {
+        dbHelper.DeleteDataByName(name);
+    }
+
+    public void UpDateAllRate() throws IOException, SQLException {
+        Cursor res = GetCursor();
+        res.moveToFirst();
+        DataStruct dataStruct = new DataStruct();
+        while (res.isAfterLast() == false)
+        {
+            dataStruct.abbr= res.getString(res.getColumnIndex("name"));
+            dataStruct.description= res.getString(res.getColumnIndex("description"));
+            dataStruct.symbol= res.getString(res.getColumnIndex("symbol"));
+            DBInsert(dataStruct.abbr,dataStruct.description,dataStruct.symbol);
+            res.moveToNext();
+        }
     }
 }
 
